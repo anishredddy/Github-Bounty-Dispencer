@@ -1,0 +1,63 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  githubId         String   @unique
+  githubUsername   String   @unique
+  githubProfilePic String
+  email            String?  @unique
+  bounties         Bounty[] @relation("BountyCreator")
+  claims           Claim[]  @relation("Claimant")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Bounty {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  amount      Float
+  status      BountyStatus @default(PENDING)
+  creator     User         @relation("BountyCreator", fields: [creatorId], references: [id])
+  creatorId   Int
+  issueId     String // GitHub issue identifier
+  claims      Claim[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([creatorId])
+}
+
+model Claim {
+  id           Int         @id @default(autoincrement())
+  bounty       Bounty      @relation(fields: [bountyId], references: [id])
+  bountyId     Int
+  claimant     User        @relation("Claimant", fields: [claimantId], references: [id])
+  claimantId   Int
+  status       ClaimStatus @default(PENDING)
+  claimDate    DateTime    @default(now())
+  resolvedDate DateTime?
+
+  @@index([bountyId])
+  @@index([claimantId])
+}
+
+enum BountyStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
