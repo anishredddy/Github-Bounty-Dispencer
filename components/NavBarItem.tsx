@@ -16,14 +16,15 @@ const NavBarItem: React.FC<SideBarItemProps> = ({
   text,
 }) => {
   return (
-    <nav className="flex items-center space-x-5 lg:space-x-7">
+    <nav className="flex items-center px-5 lg:px-7">
       <Link
         href={href}
         className={`text-sm font-medium transition-colors hover:text-primary ${
           active ? "text-black dark:text-white" : "text-muted-foreground"
         }`}
-      ></Link>
-      <p className="text-white">{text}</p>
+      >
+        <p className="text-white">{text}</p>
+      </Link>
     </nav>
   );
 };

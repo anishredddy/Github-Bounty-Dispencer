@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthContext from "@/context/AuthContext";
 import { ToasterProvider } from "@/provider/ToastProvider";
+import { PublicKeyDialog } from "@/components/PublicKey";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="bg-gray-950 w-full">
+        <div className="min-h-screen bg-gray-950 w-full">
           <AuthContext>
             <ToasterProvider />
+            <PublicKeyDialog />
             {children}
           </AuthContext>
         </div>

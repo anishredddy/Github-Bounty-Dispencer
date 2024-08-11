@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { IssueType } from "@/types/IssueType";
 import { Repo } from "@/types/RepoType";
+import { Github } from "lucide-react";
 import Link from "next/link";
 
 // interface CardItemProps {
@@ -24,19 +25,20 @@ const IssueItem: React.FC<IssueType> = ({
   bounty,
   opened_by,
   closed_by,
+  repo,
 }) => {
   return (
     <Card className="bg-githubComp">
       <CardHeader>
         <div className="flex">
-          <Link href={`/admin/${name}`}>
+          <Link href={`/admin/${repo}/${number}`}>
             <CardTitle className="text-white underline">
               {title} #{number}
             </CardTitle>
           </Link>
           <Link href={url} className="ml-auto" target="_blank">
             <CardTitle className="text-sm ml-auto text-gray-400">
-              Open Issue
+              <Github />
             </CardTitle>
           </Link>
         </div>

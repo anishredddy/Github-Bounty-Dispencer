@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { z } from "zod";
+import { number, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import {
@@ -14,18 +14,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { title } from "process";
 
-import { Octokit } from "@octokit/rest";
-
-interface RepoNameProps {
-  params: {
-    RepoName: string;
-  };
+interface IssueProps {
+  RepoName: string;
+  issue: string;
+  title: string;
+  description: string;
+  bounty: string;
+  buttonText: string;
+  create: boolean;
 }
 
 const formSchema = z.object({
@@ -36,7 +37,15 @@ const formSchema = z.object({
 
 type issueForm = z.infer<typeof formSchema>;
 
-const Page: React.FC<RepoNameProps> = ({ params }) => {
+const IssueForm: React.FC<IssueProps> = ({
+  RepoName,
+  issue,
+  title,
+  description,
+  bounty,
+  buttonText,
+  create,
+}) => {
   const { data: session, status } = useSession();
 
   const accessToken = session?.accessToken;
@@ -44,9 +53,9 @@ const Page: React.FC<RepoNameProps> = ({ params }) => {
   const formMethods = useForm<issueForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "New Issue",
-      description: "",
-      bounty: "0",
+      title: title,
+      description: description,
+      bounty: bounty,
     },
   });
 
@@ -57,24 +66,29 @@ const Page: React.FC<RepoNameProps> = ({ params }) => {
     }
 
     try {
-      const res = await axios.post(
-        `https://api.github.com/repos/${session.user?.name}/${params.RepoName}/issues`,
-        {
-          title: data.title,
-          body: data.description,
-        },
-        {
-          headers: {
-            Authorization: `token ${session.accessToken}`,
+      if (create) {
+        const res = await axios.post(
+          `https://api.github.com/repos/${session.user?.name}/${RepoName}/issues`,
+          {
+            title: data.title,
+            body: data.description,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `token ${session.accessToken}`,
+            },
+          }
+        );
 
-      console.log(res);
+        console.log(res);
 
-      //   console.log(res);
+        //   console.log(res);
 
-      toast.success("Issue created successfully!");
+        toast.success("Issue created successfully!");
+      } else {
+        //TODO
+        toast.success("Bounty created sucessfully");
+      }
     } catch (error) {
       console.log("Create issue error : ", error);
       toast.error("Failed to create issue.");
@@ -83,11 +97,12 @@ const Page: React.FC<RepoNameProps> = ({ params }) => {
 
   return (
     <div>
-      <h1 className="mt-5 px-12 text-4xl text-white">
-        Repo: {params.RepoName}
-      </h1>
+      <h1 className="mt-5 px-12 text-4xl text-white">Repo: {RepoName}</h1>
       <div className="px-10 py-4">
         <Separator className="bg-slate-600" />
+      </div>
+      <div className="mt-3 px-12">
+        <p className="text-xl text-white">{issue}</p>
       </div>
       <div className="px-12 py-4">
         <FormProvider {...formMethods}>
@@ -154,7 +169,7 @@ const Page: React.FC<RepoNameProps> = ({ params }) => {
                   className="bg-green-600 hover:bg-green-700 hover:text-black transition"
                   type="submit"
                 >
-                  Create Issue
+                  {buttonText}
                 </Button>
               </div>
             </div>
@@ -165,4 +180,4 @@ const Page: React.FC<RepoNameProps> = ({ params }) => {
   );
 };
 
-export default Page;
+export default IssueForm;

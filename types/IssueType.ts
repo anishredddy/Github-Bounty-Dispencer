@@ -7,4 +7,5 @@ export interface IssueType{
     opened_by: string;
     closed_by?: string;
     url: string; 
+    repo?: string;
 }

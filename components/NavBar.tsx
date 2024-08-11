@@ -15,17 +15,22 @@ import {
 } from "./ui/dropdown-menu";
 import Link from "next/link";
 import { GithubIcon, LogOut } from "lucide-react";
+import { SiSolana } from "react-icons/si";
+import { usePublicKey } from "@/hooks/usePublicKey";
 
 const NavBar = () => {
   const { data: session, status } = useSession();
 
+  const onOpen = usePublicKey((state) => state.onOpen);
+  const isOpen = usePublicKey((state) => state.isOpen);
   // console.log(session?.user?.name);
 
   return (
     <div className="border-b ">
       <div className="flex h-16 items-center px-6">
-        <NavBarItem href="/create" text="Create Bounty" />
+        <NavBarItem href="/admin" text="Admin" />
         <NavBarItem href="/bounties" text="Bounties" />
+        <NavBarItem href="/claim" text="Claim" />
         <div className="ml-auto pr-10">
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -50,6 +55,12 @@ const NavBar = () => {
                 <div className="flex">
                   <LogOut />
                   <span className="ml-4">Logout</span>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onOpen()}>
+                <div className="flex">
+                  <SiSolana />
+                  <span className="ml-4">Public Key </span>
                 </div>
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -2,9 +2,12 @@
 
 import CardItem from "@/components/CardItem";
 import IssueItem from "@/components/IssueItem";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { IssueType } from "@/types/IssueType";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { title } from "process";
 import { useEffect, useState } from "react";
 
@@ -18,6 +21,8 @@ const page: React.FC<IssueProps> = ({ params }) => {
   const { data: session, status } = useSession();
   const [issue, setIssue] = useState<IssueType[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
   useEffect(() => {
     if (session?.user) {
       axios
@@ -46,8 +51,26 @@ const page: React.FC<IssueProps> = ({ params }) => {
   console.log(issue);
 
   return (
-    <div className="py-10 px-6">
-      <div className="flex px-8 text-white w-full">
+    <div className="py-3 px-6">
+      <div className="flex mt-5 mb-1 px-12 text-4xl">
+        <h1 className=" text-white">Issues</h1>
+        <div className="ml-auto">
+          <Button
+            variant="default"
+            className="bg-green-600 hover:bg-green-700 hover:text-black transition"
+            type="submit"
+            onClick={() => {
+              router.push(`/admin/${params.RepoName}/issue`);
+            }}
+          >
+            Create Issue
+          </Button>
+        </div>
+      </div>
+      <div className="px-10 py-4">
+        <Separator className="bg-slate-600" />
+      </div>
+      <div className="flex px-8 text-white w-full mt-4">
         <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2  gap-4 w-full text-white">
           {issue.map((issue: IssueType) => (
             <IssueItem
@@ -58,6 +81,7 @@ const page: React.FC<IssueProps> = ({ params }) => {
               id={issue.number}
               url={issue.url}
               description={issue.description}
+              repo={params.RepoName}
             />
           ))}
         </div>
