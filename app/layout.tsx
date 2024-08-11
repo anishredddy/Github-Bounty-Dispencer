@@ -4,6 +4,7 @@ import "./globals.css";
 import AuthContext from "@/context/AuthContext";
 import { ToasterProvider } from "@/provider/ToastProvider";
 import { PublicKeyDialog } from "@/components/PublicKey";
+import NavBar from "@/components/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
           <AuthContext>
             <ToasterProvider />
             <PublicKeyDialog />
+            <NavBar />
             {children}
           </AuthContext>
         </div>

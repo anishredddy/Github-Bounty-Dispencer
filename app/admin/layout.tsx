@@ -6,10 +6,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="h-full w-full">
-      <NavBar />
-      {children}
-    </div>
-  );
+  return <div className="h-full w-full">{children}</div>;
 }

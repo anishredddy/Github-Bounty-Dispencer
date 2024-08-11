@@ -1,7 +1,9 @@
 "use client";
 
+import { Separator } from "@/components/ui/separator";
 import { Repo } from "@/types/RepoType";
 import axios from "axios";
+import { Github } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,63 +22,21 @@ export default function Home() {
   // console.log("Session status:", status);
   // console.log("Session data:", session);
 
-  const accessToken = session?.accessToken;
-
   // console.log("Access Token:", accessToken);
 
-  const [repos, setRepos] = useState<Repo[]>([]);
-
-  useEffect(() => {
-    if (session?.accessToken) {
-      axios
-        .get("https://api.github.com/user/repos", {
-          headers: {
-            Authorization: `token ${session.accessToken}`,
-          },
-        })
-        .then((response) => {
-          setRepos(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching repositories:", error);
-        });
-    }
-  }, [session]);
-
-  if (session) {
-    return (
-      <div>
-        <h1>Signed in as {session.user?.name}</h1>
-        <button onClick={() => signOut()}>Sign out</button>
-        <h2>Your Repositories:</h2>
-        <ul>
-          {repos.map((repo) => (
-            <li key={repo?.id}>
-              <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
-                {repo.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center h-full ">
-        <button
-          className="flex bg-black text-white rounded-md px-10 py-3 font-bold"
-          onClick={() => signIn("github")}
-        >
-          Hello
-        </button>
-        <button
-          className="flex bg-black text-white rounded-md px-10 py-3 font-bold"
-          onClick={() => signOut()}
-        >
-          Bye
-        </button>
+    <div className="h-screen w-screen flex items-center justify-center ">
+      <div className="flex flex-col items-center space-y-4 bg-slate-200 rounded-xl">
+        {/* <p className=" text-xl mt-10 mb-5">Sign in!</p>
+        <Separator className="bg-black" /> */}
+        <div className="mx-10 py-10">
+          <div className="bg-white rounded-md py-2 px-5 hover:bg-gray-400 transition hover:cursor-pointer">
+            <div className="flex items-center" onClick={() => signIn("github")}>
+              <Github className="text-gray-800" />
+              <p className="ml-5 text-xl">Sign in with Github</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
