@@ -36,7 +36,7 @@ export function PublicKeyDialog() {
             <Input
               id="key"
               defaultValue="sd9977fsdv066dx878s"
-              className="col-span-3"
+              className="col-span-3 text-black"
             />
           </div>
         </div>

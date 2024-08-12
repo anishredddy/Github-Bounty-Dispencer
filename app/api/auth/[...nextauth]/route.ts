@@ -1,20 +1,44 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { User as NextAuthUser } from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-import prismadb from "@/lib/prismadb";
+import prisma from "@/lib/prismadb";
 
 if (!process.env.GITHUB_ID || !process.env.GITHUB_SECRET) {
     throw new Error("GitHub clientId or clientSecret is not defined in environment variables.");
 }
+
+const handleSignin = async (user: NextAuthUser) => {
+    try {
+        const existingUser = await prisma.user.findUnique({
+            where: { githubId: user.id }
+        });
+
+        // console.log(existingUser)
+
+        if (!existingUser) {
+            await prisma.user.create({
+                data: {
+                    githubId: user.id,
+                    githubUsername: user.name ? user.name : "anish",
+                    githubProfilePic: user.image ? user.image : "/public/default_dp.jpg",
+                    email: user.email || null,
+                },
+            });
+        }
+    } catch (error) {
+        console.log("Error creating user in DB: ", error);
+    }
+};
 
 const handler = NextAuth({
     providers: [
         GithubProvider({
             clientId: process.env.GITHUB_ID,
             clientSecret: process.env.GITHUB_SECRET,
-            authorization:{
-                params:{
+            authorization: {
+                params: {
                     scope: 'repo user',
                 }
             }
@@ -38,31 +62,15 @@ const handler = NextAuth({
                 session.accessToken = token.accessToken;
             }
             return session;
+        },
+        async signIn({ user }) {
+            // Call handleSignin when a user signs in
+            await handleSignin(user);
+            return true; // Ensure signIn callback returns true to complete sign-in
         }
-    }
+    },
+    // adapter: PrismaAdapter(prisma), // Use Prisma adapter for database operations
 });
-
-// async function hnadleSignin(user:NextAuthUser) {
-//     try{
-//         const existingUser=await prismadb.user.findUnique({
-//             where:{githubId:user.id}
-//         });
-
-//         if(!existingUser){
-//             await prismadb.user.create({
-//                 data:{
-//                     githubId:user.id,
-//                     githubUsername :user.name ? user.name : "anish",
-//                     githubProfilePic: user.image ? user.image : "/public/default_dp.jpg",
-//                     email: user.email || null,
-//                 },
-//             });
-//         }
-//     }
-//     catch(error){
-//         console.log("user creating in db error ",error)
-//     }
-// }
 
 export { handler as GET, handler as POST };
 
