@@ -15,16 +15,21 @@ import Link from "next/link";
 //   description?: string;
 
 // }
+interface BountyItemProps {
+  number: string;
+  title: string;
+  description: string;
+  bounty: string;
+  url: string;
+  repo: string;
+}
 
-const IssueItem: React.FC<IssueType> = ({
-  id,
+const BountyItem: React.FC<BountyItemProps> = ({
   number,
   title,
   description,
   url,
   bounty,
-  opened_by,
-  closed_by,
   repo,
 }) => {
   return (
@@ -42,9 +47,11 @@ const IssueItem: React.FC<IssueType> = ({
             </CardTitle>
           </Link>
         </div>
-        <CardDescription className="flex">
-          opened by <p className="font-bold ml-2">{opened_by}</p>
-          <p className="ml-auto">Bounty: {bounty || 0}</p>
+        <CardDescription className="flex ml-auto">
+          Bounty: {bounty || 0}
+          {/* <div className="flex">
+            <div className="ml-auto">Bounty: {bounty || 0}</div>
+          </div> */}
         </CardDescription>
         <CardDescription className="text-md">{description}</CardDescription>
       </CardHeader>
@@ -53,4 +60,4 @@ const IssueItem: React.FC<IssueType> = ({
   );
 };
 
-export default IssueItem;
+export default BountyItem;

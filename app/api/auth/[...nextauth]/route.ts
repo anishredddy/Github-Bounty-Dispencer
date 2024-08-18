@@ -49,10 +49,11 @@ const handler = NextAuth({
         strategy: 'jwt',
     },
     callbacks: {
-        async jwt({ token, account }) {
+        async jwt({ token, account, user }) {
             // Persist the OAuth access_token to the token right after signin
-            if (account) {
+            if (account && user) {
                 token.accessToken = account.access_token;
+                token.githubId = user.id;
             }
             return token;
         },
@@ -60,6 +61,9 @@ const handler = NextAuth({
             // Send properties to the client, like an access_token from a provider.
             if (token?.accessToken) {
                 session.accessToken = token.accessToken;
+            }
+            if (token?.githubId) {
+                session.githubId = token.githubId as string;
             }
             return session;
         },
@@ -77,11 +81,13 @@ export { handler as GET, handler as POST };
 declare module "next-auth" {
     interface Session {
         accessToken?: string;
+        githubId?: string;
     }
 }
 
 declare module "next-auth/jwt" {
     interface JWT {
         accessToken?: string;
+        githubId?: string;
     }
 }

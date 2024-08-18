@@ -32,6 +32,9 @@ const Page: React.FC<RepoNameProps> = async ({ params }) => {
             bounty="0"
             buttonText="Create Bounty"
             create={false}
+            issueId={response.data.id}
+            number={params.issue}
+            url={response.data.url}
           />
         </div>
       );

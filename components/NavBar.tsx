@@ -29,7 +29,7 @@ const NavBar = () => {
     <div className="border-b ">
       <div className="flex h-16 items-center px-6">
         <NavBarItem href="/admin" text="Admin" />
-        <NavBarItem href="/bounties" text="Bounties" />
+        <NavBarItem href="/" text="Bounties" />
         <NavBarItem href="/claim" text="Claim" />
         <div className="ml-auto pr-10">
           <DropdownMenu>

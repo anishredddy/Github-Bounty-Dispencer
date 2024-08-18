@@ -9,8 +9,7 @@ generator client {
 }
 
 model User {
-  id               Int      @id @default(autoincrement())
-  githubId         String   @unique
+  githubId         String   @id @unique
   githubUsername   String   @unique
   githubProfilePic String
   email            String?  @unique
@@ -22,12 +21,15 @@ model User {
 
 model Bounty {
   id          Int          @id @default(autoincrement())
+  issueNumber String
+  url         String
   title       String
   description String
+  RepoName    String
   amount      Float
   status      BountyStatus @default(PENDING)
-  creator     User         @relation("BountyCreator", fields: [creatorId], references: [id])
-  creatorId   Int
+  creator     User         @relation("BountyCreator", fields: [creatorId], references: [githubId])
+  creatorId   String
   issueId     String // GitHub issue identifier
   claims      Claim[]
   createdAt   DateTime     @default(now())
@@ -40,8 +42,8 @@ model Claim {
   id           Int         @id @default(autoincrement())
   bounty       Bounty      @relation(fields: [bountyId], references: [id])
   bountyId     Int
-  claimant     User        @relation("Claimant", fields: [claimantId], references: [id])
-  claimantId   Int
+  claimant     User        @relation("Claimant", fields: [claimantId], references: [githubId])
+  claimantId   String
   status       ClaimStatus @default(PENDING)
   claimDate    DateTime    @default(now())
   resolvedDate DateTime?

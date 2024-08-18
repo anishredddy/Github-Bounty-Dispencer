@@ -27,6 +27,9 @@ interface IssueProps {
   bounty: string;
   buttonText: string;
   create: boolean;
+  issueId?: string;
+  number?: string;
+  url?: string;
 }
 
 const formSchema = z.object({
@@ -45,6 +48,9 @@ const IssueForm: React.FC<IssueProps> = ({
   bounty,
   buttonText,
   create,
+  issueId,
+  number,
+  url,
 }) => {
   const { data: session, status } = useSession();
 
@@ -82,13 +88,34 @@ const IssueForm: React.FC<IssueProps> = ({
 
         console.log(res);
 
-        //   console.log(res);
+        if (!issueId) {
+          issueId = res.data.id;
+        }
 
-        toast.success("Issue created successfully!");
-      } else {
-        //TODO
-        toast.success("Bounty created sucessfully");
+        if (!number) {
+          number = res.data.number;
+        }
+        if (!url) {
+          url = res.data.url;
+        }
+
+        //   console.log(res);
       }
+      const payload = {
+        title: data.title,
+        description: data.description,
+        amount: data.bounty,
+        issueId: issueId,
+        creatorId: session.githubId,
+        RepoName: RepoName,
+        issueNumber: number,
+        url: url,
+      };
+      const create_bounty = await axios.post("/api/bounty", payload);
+
+      toast.success("Bounty created successfully!");
+
+      console.log(create_bounty);
     } catch (error) {
       console.log("Create issue error : ", error);
       toast.error("Failed to create issue.");
