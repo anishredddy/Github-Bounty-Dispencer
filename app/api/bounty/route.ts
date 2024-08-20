@@ -52,3 +52,17 @@ export async function POST(
         return new NextResponse('internal error',{status:500})
     }
 }
+
+export async function GET(
+    req: Request
+) {
+    try{
+        const bounties=await prisma.bounty.findMany()
+        return NextResponse.json(bounties,{status:200})
+    }
+    catch(error){
+        console.log("get bounty error")
+        return new NextResponse('internal error',{status:500})
+    }
+
+}

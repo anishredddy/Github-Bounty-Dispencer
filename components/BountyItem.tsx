@@ -9,6 +9,7 @@ import { IssueType } from "@/types/IssueType";
 import { Repo } from "@/types/RepoType";
 import { Github } from "lucide-react";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
 // interface CardItemProps {
 //   title: string;
@@ -22,6 +23,7 @@ interface BountyItemProps {
   bounty: string;
   url: string;
   repo: string;
+  status?: string;
 }
 
 const BountyItem: React.FC<BountyItemProps> = ({
@@ -31,12 +33,13 @@ const BountyItem: React.FC<BountyItemProps> = ({
   url,
   bounty,
   repo,
+  status,
 }) => {
   return (
     <Card className="bg-githubComp">
       <CardHeader>
         <div className="flex">
-          <Link href={`/admin/${repo}/${number}`}>
+          <Link href={url}>
             <CardTitle className="text-white underline">
               {title} #{number}
             </CardTitle>
@@ -55,7 +58,18 @@ const BountyItem: React.FC<BountyItemProps> = ({
         </CardDescription>
         <CardDescription className="text-md">{description}</CardDescription>
       </CardHeader>
-      <CardContent>{/* <p className="text-white">{}</p> */}</CardContent>
+      <div className="flex ml-auto px-5 py-4">
+        {status && (
+          <Button
+            variant="default"
+            className="bg-green-600 hover:bg-green-700 hover:text-black transition"
+            type="submit"
+            onClick={() => {}}
+          >
+            {status == "PENDING" ? "Claim Bounty" : "Already CLaimed"}
+          </Button>
+        )}
+      </div>
     </Card>
   );
 };
