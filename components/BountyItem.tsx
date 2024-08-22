@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -5,11 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { IssueType } from "@/types/IssueType";
-import { Repo } from "@/types/RepoType";
 import { Github } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+
+import { usePublicKey } from "@/hooks/usePublicKey";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 // interface CardItemProps {
 //   title: string;
@@ -23,7 +28,8 @@ interface BountyItemProps {
   bounty: string;
   url: string;
   repo: string;
-  status?: string;
+  statuss?: string;
+  claim?: boolean;
 }
 
 const BountyItem: React.FC<BountyItemProps> = ({
@@ -33,8 +39,24 @@ const BountyItem: React.FC<BountyItemProps> = ({
   url,
   bounty,
   repo,
-  status,
+  statuss,
+  claim,
 }) => {
+  const onOpen = usePublicKey((state) => state.onOpen);
+  const { data: session, status } = useSession();
+
+  const onSubmit = async () => {
+    if (statuss == "COMPLETED") {
+      toast.success("Bounty already claimed bro");
+    }
+    const res = await axios.post("/api/publicKey", {
+      githubId: session?.githubId,
+    });
+
+    if (!res.data.publicKey) {
+      onOpen();
+    }
+  };
   return (
     <Card className="bg-githubComp">
       <CardHeader>
@@ -58,15 +80,25 @@ const BountyItem: React.FC<BountyItemProps> = ({
         </CardDescription>
         <CardDescription className="text-md">{description}</CardDescription>
       </CardHeader>
-      <div className="flex ml-auto px-5 py-4">
-        {status && (
+      <div className="flex px-5 py-4 justify-end">
+        {claim && (
           <Button
             variant="default"
             className="bg-green-600 hover:bg-green-700 hover:text-black transition"
             type="submit"
+            onClick={onSubmit}
+          >
+            {statuss == "PENDING" ? "Claim Bounty" : "Already CLaimed"}
+          </Button>
+        )}
+        {!claim && (
+          <Button
+            variant="default"
+            className="bg-green-600 hover:bg-green-600 hover:text-white transition cursor-default"
+            type="submit"
             onClick={() => {}}
           >
-            {status == "PENDING" ? "Claim Bounty" : "Already CLaimed"}
+            {statuss == "PENDING" ? "Open" : "Closed"}
           </Button>
         )}
       </div>

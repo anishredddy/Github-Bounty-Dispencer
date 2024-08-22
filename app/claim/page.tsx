@@ -41,7 +41,6 @@ const Page = () => {
               const message = commit_url.data.author.login;
 
               if (message === session?.user?.name) {
-                console.log(bounty);
                 newClaimBounties.push(bounty);
               }
             }
@@ -78,7 +77,8 @@ const Page = () => {
               url={issue.url}
               description={issue.description}
               repo={issue.RepoName}
-              status={issue.status}
+              statuss={issue.status}
+              claim={true}
             />
           ))}
         </div>

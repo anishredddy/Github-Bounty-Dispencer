@@ -35,6 +35,7 @@ const Home = async () => {
               url={issue.url}
               description={issue.description}
               repo={issue.RepoName}
+              statuss={issue.status}
             />
           ))}
         </div>

@@ -17,6 +17,7 @@ model User {
   claims           Claim[]  @relation("Claimant")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  publicKey        String?
 }
 
 model Bounty {
