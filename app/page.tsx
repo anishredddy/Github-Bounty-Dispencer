@@ -20,11 +20,20 @@ export default function Home() {
 
   return (
     <div className="h-screen w-full flex items-center justify-center">
-      <div className="flex flex-col items-center space-y-4 bg-slate-200 rounded-xl p-10">
-        <div className="bg-white rounded-md py-2 px-5 hover:bg-gray-400 transition hover:cursor-pointer">
-          <div className="flex items-center" onClick={() => signIn("github")}>
-            <Github className="text-gray-800" />
-            <p className="ml-5 text-xl">Sign in with Github</p>
+      <div className="flex flex-col items-center space-y-4 bg-githubComp rounded-xl p-8">
+        <p className="px-5 text-3xl text-white">100X Devs</p>
+        <p className="px-3 text-xl text-white">
+          Why be 10x , when you can be 100x
+        </p>
+        <div className="py-3">
+          <div className="bg-green-600 rounded-md py-2 px-5 hover:bg-green-500 transition hover:cursor-pointer">
+            <div
+              className="flex items-center "
+              onClick={() => signIn("github")}
+            >
+              <Github className=" text-white " />
+              <p className="ml-5 text-xl text-white">Sign in with Github</p>
+            </div>
           </div>
         </div>
       </div>

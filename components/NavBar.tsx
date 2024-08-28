@@ -28,6 +28,15 @@ const NavBar = () => {
   return (
     <div className="border-b ">
       <div className="flex h-16 items-center px-6">
+        <nav className="flex items-center px-5 lg:px-7">
+          <div
+            className={`text-sm font-medium transition-colors hover:text-primary bg-green-600 rounded-md`}
+          >
+            <div className="flex text-white px-2 py-2">
+              <p>100xdevs</p>
+            </div>
+          </div>
+        </nav>
         <NavBarItem href="/admin" text="Admin" />
         <NavBarItem href="/" text="Bounties" />
         <NavBarItem href="/claim" text="Claim" />

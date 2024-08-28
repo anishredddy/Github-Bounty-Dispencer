@@ -15,20 +15,34 @@ import { Label } from "@/components/ui/label";
 import { usePublicKey } from "@/hooks/usePublicKey";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export function PublicKeyDialog() {
   const isOpen = usePublicKey((state) => state.isOpen);
   const onClose = usePublicKey((state) => state.onClose);
-
+  const { data: session, status } = useSession();
   const [key, setKey] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setKey(event.target.value);
   };
 
-  const { data: session } = useSession();
+  useEffect(() => {
+    const fetchData = async () => {
+      if (session?.githubId) {
+        try {
+          const res = await axios.post("/api/publicKey", {
+            githubId: session.githubId,
+          });
+          setKey(res.data.publicKey);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    fetchData();
+  }, []);
 
   const onSubmit = async () => {
     try {
@@ -38,6 +52,7 @@ export function PublicKeyDialog() {
       });
       console.log(res.data);
       toast.success("saved public key");
+      onClose();
     } catch (error) {
       toast.error("Error saving public Key");
       console.log(error);
@@ -45,7 +60,7 @@ export function PublicKeyDialog() {
   };
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
-      <DialogContent className="sm:max-w-[425px] bg-gray-950 text-white border-gray-700">
+      <DialogContent className="sm:max-w-[425px] md:max-w-[600px] bg-gray-950 text-white border-gray-700">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
@@ -60,9 +75,10 @@ export function PublicKeyDialog() {
             </Label>
             <Input
               id="key"
-              placeholder="sd9977fsdv066dx878s"
+              placeholder="Enter Public Key"
               className="col-span-3 text-black"
               onChange={handleInputChange}
+              value={key !== "" ? key : undefined}
             />
           </div>
         </div>

@@ -158,7 +158,7 @@ const IssueForm: React.FC<IssueProps> = ({
                   name="bounty"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Bounty</FormLabel>
+                      <FormLabel>Bounty in $</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="0"

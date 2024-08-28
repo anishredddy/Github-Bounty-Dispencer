@@ -42,10 +42,15 @@ const IssueItem: React.FC<IssueType> = ({
             </CardTitle>
           </Link>
         </div>
-        <CardDescription className="flex">
-          opened by <p className="font-bold ml-2">{opened_by}</p>
-          <p className="ml-auto">Bounty: {bounty || 0}</p>
-        </CardDescription>
+        <div className="flex">
+          <CardDescription className="flex">opened by</CardDescription>
+          <CardDescription className="ml-2 font-bold underline">
+            {opened_by}
+          </CardDescription>
+          <CardDescription className="ml-auto">
+            Bounty: $ {bounty || 0}
+          </CardDescription>
+        </div>
         <CardDescription className="text-md">{description}</CardDescription>
       </CardHeader>
       <CardContent>{/* <p className="text-white">{}</p> */}</CardContent>

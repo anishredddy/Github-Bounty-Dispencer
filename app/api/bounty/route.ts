@@ -57,7 +57,11 @@ export async function GET(
     req: Request
 ) {
     try{
-        const bounties=await prisma.bounty.findMany()
+        const bounties=await prisma.bounty.findMany({
+            include:{
+                claims:true
+            }
+        })
         return NextResponse.json(bounties,{status:200})
     }
     catch(error){

@@ -1,8 +1,9 @@
-import prisma from "@/lib/prismadb";
-import axios from "axios";
-import { getServerSession } from "next-auth";
-
+"use client";
 import { Bounty } from "@prisma/client";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import getBounties from "@/actions/getbounties";
+import { useSession } from "next-auth/react";
 import { Separator } from "@/components/ui/separator";
 import BountyItem from "@/components/BountyItem";
 
@@ -11,45 +12,52 @@ interface issueInterface {
   commit_url: string;
 }
 
-const page = async () => {
-  const session = await getServerSession();
-  const fetchBouties = await prisma.bounty.findMany();
+const Page = () => {
+  const [claimBounties, setClaimBounties] = useState<Bounty[]>([]);
+  const { data: session } = useSession();
 
-  if (!session) {
-    return null;
-  }
+  useEffect(() => {
+    const getClaimBounties = async () => {
+      if (!session) return;
 
-  console.log(session);
+      try {
+        const bounties: Bounty[] = (await axios.get("/api/bounty")).data;
+        // console.log(bounties);
+        const newClaimBounties: Bounty[] = [];
 
-  const claimedBounties: Bounty[] = [];
-  await Promise.all(
-    fetchBouties.map(async (bounty) => {
-      // console.log(bounty);
-      const url = bounty.url;
-      const githubEvents: issueInterface[] = (await axios.get(`${url}/events`))
-        .data;
-      // console.log(githubEvents);
-      // console.log(githubEvents);
-      // console.log(githubIssue);
-      githubEvents.map(async (event) => {
-        if (event.event == "closed") {
-          const res = await axios.get(event.commit_url);
-          // console.log(res);
-          const message = res.data.author.login;
-          // console.log(message, session?.user?.name);
-          if (message === session?.user?.name) {
-            console.log(message);
-            console.log(claimedBounties);
-            console.log("push");
-            claimedBounties.push(bounty);
-            // console.log(claimedBounties);
+        for (const bounty of bounties) {
+          const url = bounty.url;
+          const githubEvents: issueInterface[] = (
+            await axios.get(`${url}/events`, {
+              headers: {
+                Authorization: `token ${session.accessToken}`,
+              },
+            })
+          ).data;
+
+          for (const event of githubEvents) {
+            if (event.event === "closed") {
+              const commit_url = await axios.get(event.commit_url);
+              const message = commit_url.data.author.login;
+
+              if (message === session?.user?.name) {
+                newClaimBounties.push(bounty);
+              }
+            }
           }
         }
-      });
-    })
-  );
 
-  console.log(claimedBounties);
+        setClaimBounties(newClaimBounties);
+      } catch (error) {
+        console.error("Error fetching or processing bounties:", error);
+      }
+    };
+
+    getClaimBounties();
+  }, [session]);
+
+  // console.log("hello", claimBounties);
+
   return (
     <div className="py-3 px-6">
       <div className="flex mt-5 mb-1 px-12 text-4xl">
@@ -60,7 +68,7 @@ const page = async () => {
       </div>
       <div className="flex px-8 text-white w-full mt-4">
         <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2  gap-4 w-full text-white">
-          {claimedBounties.map((issue) => (
+          {claimBounties.map((issue) => (
             <BountyItem
               bounty={issue.amount.toString()}
               key={issue.id}
@@ -69,7 +77,8 @@ const page = async () => {
               url={issue.url}
               description={issue.description}
               repo={issue.RepoName}
-              status={issue.status}
+              statuss={issue.status}
+              claim={true}
             />
           ))}
         </div>
@@ -78,4 +87,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;

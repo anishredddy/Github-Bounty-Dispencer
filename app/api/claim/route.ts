@@ -8,32 +8,26 @@ export async function POST(
     req: Request
 ) {
     try{
-        const session=await getServerSession();
 
-        // console.log(session)
-
-        if (!session ){
-            return new NextResponse('hacker hain hacker',{status:400})
-        }
         const data=await req.json()
 
-        const {
-            githubId
-        }=data
+        const {githubId, bountyId}=data
 
+        if(bountyId || githubId){
+            return new NextResponse('Not enough deets bros',{status:401})
+        }
 
-        const user = await prisma.user.findUnique({
-            where:{
-                githubId:githubId
+        const claim=await prisma.claim.create({
+            data:{
+                bountyId: parseInt(bountyId, 10),
+                claimantId: githubId,
+                status: "APPROVED"
             }
         })
 
-        if(!user){
-            return new NextResponse('hacker hain hacker',{status:200})
-        }
+        return NextResponse.json({claim})
 
-        return new NextResponse('Hiii',{status:200})
-    }
+   }
     catch(error){
         console.log(error)
         return new NextResponse('Claim POST error',{status:500})

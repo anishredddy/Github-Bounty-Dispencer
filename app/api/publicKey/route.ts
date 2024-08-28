@@ -21,6 +21,9 @@ export async function POST(
             githubId
         }=data
 
+        if(!githubId){
+            return new NextResponse('login first bro',{status:403})
+        }
 
         const user = await prisma.user.findUnique({
             where:{
