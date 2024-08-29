@@ -25,9 +25,11 @@
 ## env variables 
 
 GITHUB_ID=O_Auth id
+
 GITHUB_SECRET=o auth secret
 
 NEXTAUTH_SECRET="NEXTAUTH_SECRET"
+
 NEXTAUTH_URL=http://localhost:3000
 
 DATABASE_URL="postgres://avnadmin:{insert your oass}@github-bounty-anishreddy56789-84f0.e.aivencloud.com:15708/defaultdb?sslmode=require"
