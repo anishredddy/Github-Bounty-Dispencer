@@ -34,6 +34,9 @@ export default function Home() {
         <p className="px-3 text-xl text-white">
           Why be 10x , when you can be 100x
         </p>
+        <p className="px-3 text-xl text-white">
+          *currently running on solana DevNet
+        </p>
         <div className="py-3">
           <div className="bg-green-600 rounded-md py-2 px-5 hover:bg-green-500 transition hover:cursor-pointer">
             <div

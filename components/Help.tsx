@@ -19,6 +19,9 @@ export function HelpDialog() {
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] bg-gray-950 text-white border-gray-700">
         <DialogHeader>
           <DialogTitle>How to use?</DialogTitle>
+          <DialogDescription className="text-white ">
+            The application is using Solana DevNet currently
+          </DialogDescription>
           <DialogDescription>
             &#8226; The application is designed with 100xDevs as the admin
           </DialogDescription>
