@@ -7,19 +7,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
   const { data: session, status } = useSession();
 
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (session) {
-  //     router.push("/home");
-  //   }
-  // }, [session]);
-
-  // console.log("Session status:", status);
-  // console.log("Session data:", session);
 
   const accessToken = session?.accessToken;
 
@@ -51,7 +42,7 @@ const page = () => {
           console.error("Error fetching repositories:", error);
         });
     }
-  }, [session]);
+  }, [session, repos]);
   return (
     <div className="py-10 px-6">
       <div className="flex px-8 text-white w-full h-full">
@@ -71,4 +62,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
