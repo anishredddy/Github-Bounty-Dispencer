@@ -114,7 +114,11 @@ const BountyItem: React.FC<BountyItemProps> = ({
           {claim && (
             <Button
               variant="default"
-              className="bg-green-600 hover:bg-green-700 hover:text-black transition"
+              className={`bg-green-600  hover:text-black transition ${
+                statuss == "PENDING"
+                  ? `cursor-pointer hover:bg-green-700`
+                  : `cursor-default hover:bg-green-600 hover:text-white`
+              }`}
               type="submit"
               onClick={onSubmit}
             >

@@ -14,15 +14,17 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import Link from "next/link";
-import { GithubIcon, LogOut } from "lucide-react";
+import { GithubIcon, LogOut, MessageCircleQuestionIcon } from "lucide-react";
 import { SiSolana } from "react-icons/si";
 import { usePublicKey } from "@/hooks/usePublicKey";
+import { useHelp } from "@/hooks/useHelp";
 
 const NavBar = () => {
   const { data: session, status } = useSession();
 
   const onOpen = usePublicKey((state) => state.onOpen);
-  const isOpen = usePublicKey((state) => state.isOpen);
+
+  const onOpen2 = useHelp((state) => state.onOpen);
   // console.log(session?.user?.name);
 
   return (
@@ -69,7 +71,13 @@ const NavBar = () => {
               <DropdownMenuItem onClick={() => onOpen()}>
                 <div className="flex">
                   <SiSolana />
-                  <span className="ml-4">Public Key </span>
+                  <span className="ml-6">Public Key </span>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onOpen2()}>
+                <div className="flex">
+                  <MessageCircleQuestionIcon />
+                  <span className="ml-4">Help</span>
                 </div>
               </DropdownMenuItem>
             </DropdownMenuContent>

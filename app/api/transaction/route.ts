@@ -26,12 +26,11 @@ export async function POST(req: Request) {
         }
 
         const data = await req.json();
-        const { amt, publicKey,bountyId, githubId } = data;
+        const { amt, publicKey, bountyId, githubId } = data;
 
         const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
-
-        if (!response.data) {
-            return new NextResponse('Unable to get exchange table info', { status: 500 });
+        if (!response.data || !response.data.solana || !response.data.solana.usd) {
+            return new NextResponse('Unable to get exchange rate', { status: 500 });
         }
         
         const exchangeRate = response.data.solana.usd;
@@ -39,6 +38,10 @@ export async function POST(req: Request) {
         const lamports = Math.round(solAmount * LAMPORTS_PER_SOL);
 
         const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+
+        if(!connection){
+            return new NextResponse('could not establish connection, check internet',{status:500})
+        }
 
         if (!process.env.SOLANA_PRIVATE_KEY) {
             return new NextResponse('No private key in environment', { status: 500 });
@@ -65,22 +68,31 @@ export async function POST(req: Request) {
 
         const signature = await sendAndConfirmTransaction(connection, transaction, [payer]);
 
-        if(signature){
-            const claim=await prisma.claim.create({
-                data:{
+        if (signature) {
+            const claim = await prisma.claim.create({
+                data: {
                     bountyId: parseInt(bountyId, 10),
                     claimantId: githubId,
                     status: "APPROVED"
                 }
-            })
+            });
+
+            const bounty = await prisma.bounty.update({
+                where: {
+                    id: parseInt(bountyId, 10)
+                },
+                data: {
+                    status: "COMPLETED"
+                }
+            });
 
             return NextResponse.json({ signature, solAmount, claim });
         }
 
-        return new NextResponse('something went wrong',{status:500})        
+        return new NextResponse('Transaction failed', { status: 500 });
 
     } catch (error) {
-        console.log("Transaction Api Error", error);
+        console.error("Transaction Api Error:", error);
         return new NextResponse('Transaction POST error', { status: 500 });
     }
 }

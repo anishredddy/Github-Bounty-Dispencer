@@ -36,6 +36,7 @@ const Page = () => {
           if (bounty.claims.length > 0) {
             bounty.claims.forEach((claim) => {
               if (claim.claimantId == session.githubId) {
+                console.log(bounty);
                 newClaimBounties.push(bounty);
               } // Accessing claimantId from each claim
             });

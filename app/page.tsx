@@ -7,16 +7,25 @@ import { Github } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useHelp } from "@/hooks/useHelp";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const onOpen = useHelp((state) => state.onOpen);
+  const isOpen = useHelp((state) => state.isOpen);
+  const onClose = useHelp((state) => state.onClose);
 
   useEffect(() => {
     if (session) {
+      onClose();
       router.push("/home");
     }
   }, [session]);
+
+  useEffect(() => {
+    onOpen();
+  }, []);
 
   return (
     <div className="h-screen w-full flex items-center justify-center">
