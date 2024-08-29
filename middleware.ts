@@ -11,6 +11,5 @@ export const config ={
         "/home/:path*",
         "/admin/:path*",
         "/claim/:path*",
-        "/:path*"
     ]
 }
