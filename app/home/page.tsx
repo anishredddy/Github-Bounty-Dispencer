@@ -28,6 +28,7 @@ const Home = async () => {
         <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2  gap-4 w-full text-white">
           {bounties.map((issue) => (
             <BountyItem
+              id={issue.id.toString()}
               bounty={issue.amount.toString()}
               key={issue.id}
               title={issue.title}

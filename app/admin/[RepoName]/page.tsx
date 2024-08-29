@@ -15,7 +15,7 @@ interface IssueProps {
   };
 }
 
-const page: React.FC<IssueProps> = ({ params }) => {
+const Page: React.FC<IssueProps> = ({ params }) => {
   const { data: session, status } = useSession();
   const [issue, setIssue] = useState<IssueType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -123,4 +123,4 @@ const page: React.FC<IssueProps> = ({ params }) => {
   );
 };
 
-export default page;
+export default Page;
