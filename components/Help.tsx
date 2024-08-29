@@ -41,7 +41,11 @@ export function HelpDialog() {
             &#8226; Would love for this to be the official bounty dispencer for
             100xDevs
           </DialogDescription>
-          <Link href={"sdd"}>
+          <Link
+            href={
+              "https://drive.google.com/file/d/1CVByg4IsKrLjb9maXVCdsPpS8jmqx-FX/view?usp=sharing"
+            }
+          >
             <DialogDescription className="text-white cursor-pointer hover:underline">
               &#8226; Click for video demo
             </DialogDescription>
