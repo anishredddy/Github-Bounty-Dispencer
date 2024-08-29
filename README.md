@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+## Github Bounty Dispencer
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[Demo Video]([https://nextjs.org/](https://drive.google.com/file/d/1CVByg4IsKrLjb9maXVCdsPpS8jmqx-FX/view?usp=sharing))
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# The application is designed with 100xDevs as the admin
 
-## Learn More
+# Admin Page is made public for the purpose of demo
 
-To learn more about Next.js, take a look at the following resources:
+# The admin can visit the admin page and create a new issue/use an existing issue and assign a bounty to it
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# The user whose pull request is merged to the main branch which fixes the specific issue, can claim the bounty
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# The user can go to claim section and enter his public key and claim the bounty.
 
-## Deploy on Vercel
+# Would love for this to be the official bounty dispencer for 100xDevs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## To set up locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# npm install -> npm run dev 
+
+## env variables 
+
+GITHUB_ID=O_Auth id
+GITHUB_SECRET=o auth secret
+
+NEXTAUTH_SECRET="NEXTAUTH_SECRET"
+NEXTAUTH_URL=http://localhost:3000
+
+DATABASE_URL="postgres://avnadmin:{insert your oass}@github-bounty-anishreddy56789-84f0.e.aivencloud.com:15708/defaultdb?sslmode=require"
+
+SOLANA_PRIVATE_KEY=private key
